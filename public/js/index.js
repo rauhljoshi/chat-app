@@ -37,7 +37,7 @@ jQuery('#message-form').on('submit', (e) => {
 		from: 'User',
 		text: jQuery('[name=message]').val()
 	}, function () {
-		console.log('Got it');
+		jQuery('[name=message]').val('');
 	});
 });
 
@@ -46,13 +46,18 @@ locationButton.on('click', (e) => {
 	if (!navigator.geolocation) {
 		return alert('Geolocation not supported by your browser.');
 	}
-
+	locationButton.attr('disabled', 'disabled');
+	locationButton.text('Sending...');
 	navigator.geolocation.getCurrentPosition((position) => {
 		socket.emit('createLocationMessage', {
 			latitude: position.coords.latitude,
 			longitude: position.coords.longitude
 		});
+		locationButton.removeAttr('disabled');
+		locationButton.text('Send Location');
 	}, () => {
 		alert('Unable to fetch location.');
+		locationButton.removeAttr('disabled');
+		locationButton.text('Send Location');
 	}) 
 })
